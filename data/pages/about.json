@@ -1,0 +1,151 @@
+{
+  "components": [
+    {
+      "type": "hero_image_slider",
+      "title": "About Hero",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "hero_image_slider/1",
+      "css_file": "hero_image_slider/1",
+      "js_file": "hero_image_slider/1",
+      "description": "Hero section for about page",
+      "keyword": "about, hero, company",
+      "preview_image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+      "data": [
+        {
+          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+          "link": "/about"
+        }
+      ]
+    },
+    {
+      "type": "image_text_column",
+      "title": "Company Story",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "image_text_column/1",
+      "css_file": "image_text_column/1",
+      "js_file": "image_text_column/1",
+      "preview_image": "1",
+      "description": "Alternating image and text sections",
+      "keyword": "story, company, mission, vision",
+      "data": [
+        {
+          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+          "text1": "Our Mission",
+          "text2": "Our Vision",
+          "text3": "Our Values"
+        }
+      ]
+    },
+    {
+      "type": "category_slider",
+      "title": "Team Categories",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "category_slider/1",
+      "css_file": "category_slider/1",
+      "js_file": "category_slider/1",
+      "preview_image": "1",
+      "description": "Display team members",
+      "keyword": "team, members, staff",
+      "data": [
+        {
+          "heading": "Meet Our Team",
+          "subheading": "Expert professionals",
+          "order_by": "popularity",
+          "view_text": "",
+          "view_link": "",
+          "include_categories": [],
+          "exclude_categories": []
+        }
+      ]
+    },
+    {
+      "type": "promo_banner_grid",
+      "title": "Company Highlights",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "promo_banner/1",
+      "css_file": "promo_banner/1",
+      "js_file": "promo_banner/1",
+      "preview_image": "1",
+      "description": "Highlight company achievements",
+      "keyword": "highlights, achievements, company",
+      "data": [
+        {
+          "layout": "four_section_grid",
+          "sections": [
+            {
+              "position": "top_left",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Founded",
+              "subheading": "2015",
+              "button_text": "Learn More",
+              "button_link": "#",
+              "text_color": "ffffff"
+            },
+            {
+              "position": "top_right",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Team Size",
+              "subheading": "50+ Members",
+              "button_text": "Meet Team",
+              "button_link": "#",
+              "text_color": "ffffff"
+            },
+            {
+              "position": "bottom_left",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Awards",
+              "subheading": "10+ Recognition",
+              "button_text": "View Wins",
+              "button_link": "#",
+              "text_color": "ffffff"
+            },
+            {
+              "position": "bottom_right",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Clients",
+              "subheading": "100+ Worldwide",
+              "button_text": "Portfolio",
+              "button_link": "#",
+              "text_color": "ffffff"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "title": "Newsletter",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "newsletter/1",
+      "css_file": "newsletter/1",
+      "js_file": "newsletter/1",
+      "preview_image": "1",
+      "description": "Newsletter subscription",
+      "keyword": "newsletter, email",
+      "data": [
+        {
+          "heading": "Stay Updated",
+          "subheading": "Subscribe for latest news",
+          "placeholder": "Enter Your Email",
+          "button_text": "Subscribe",
+          "background_color": "4dffaf",
+          "heading_color": "333333",
+          "text_color": "666666",
+          "button_color": "27ae60",
+          "button_text_color": "ffffff",
+          "input_placeholder_color": "999999"
+        }
+      ]
+    }
+  ]
+}
