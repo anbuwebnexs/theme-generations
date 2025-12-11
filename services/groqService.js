@@ -1,4 +1,4 @@
-// Groq REST API Service - Theme Generator with JSON component/layout generation
+// Groq REST API Service - Conversational Theme Generator
 const https = require('https');
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
@@ -8,156 +8,174 @@ const MODEL = 'llama-3.1-8b-instant';
 const FREE_COMPONENTS = require('../data/free-1.json');
 const PRO_COMPONENTS = require('../data/pro-1.json');
 
-// Theme pages configuration
-const PAGES = {
-  // Component-based pages (7)
-  home: { type: 'components', title: 'Home' },
-  about: { type: 'components', title: 'About' },
-  contact: { type: 'components', title: 'Contact' },
-  signup: { type: 'components', title: 'Sign Up' },
-  login: { type: 'components', title: 'Login' },
-  privacy: { type: 'components', title: 'Privacy' },
-  terms: { type: 'components', title: 'Terms and Conditions' },
-  // Layout-based pages (5)
-  shop: { type: 'layouts', title: 'Shop' },
-  category: { type: 'layouts', title: 'Category' },
-  product: { type: 'layouts', title: 'Product' },
-  cart: { type: 'layouts', title: 'Cart' },
-  checkout: { type: 'layouts', title: 'Checkout' }
+// Page definitions
+const COMPONENT_PAGES = ['home', 'about', 'contact', 'signup', 'login', 'privacy', 'terms'];
+const LAYOUT_PAGES = ['shop', 'category', 'product', 'cart', 'checkout'];
+
+// Layout selection templates (1-2: free, 3-5: pro)
+const LAYOUT_TEMPLATES = {
+  shop: { layouts: ['grid', 'list', 'masonry', 'hero_grid', 'sidebar_main'] },
+  category: { layouts: ['grid', 'list', 'masonry', 'hero_grid', 'sidebar_main'] },
+  product: { layouts: ['hero_slider', 'list', 'detailed', 'comparison', 'featured'] },
+  cart: { layouts: ['simple', 'detailed', 'mini', 'fullpage', 'checkout_preview'] },
+  checkout: { layouts: ['steps', 'single_page', 'multi_step', 'express', 'full_flow'] }
 };
 
-// Convert camelCase to snake_case
-function toSnakeCase(str) {
-  return str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+if (!GROQ_API_KEY) {
+  console.warn('⚠️ Warning: GROQ_API_KEY not found in .env file');
+} else {
+  console.log('✓ Groq API Key loaded successfully');
 }
 
-// Map component objects to correct format
-function formatComponent(component, plan) {
-  return {
-    type: component.type || 'unknown',
-    title: component.title || component.type,
-    visibility: component.visibility || 'visible',
-    plans: typeof component.plans === 'string' ? component.plans : (component.plans && component.plans.join(',') || '1'),
-    category: component.category || '1',
-    ejs_file: component.ejs_file || component.ejsfile || component.type,
-    css_file: component.css_file || component.cssfile || component.type,
-    js_file: component.js_file || component.jsfile || component.type,
-    description: component.description || '1',
-    keyword: component.keyword || component.type,
-    preview_image: component.preview_image || component.previewimage || '1',
-    data: Array.isArray(component.data) ? component.data : (component.data ? [component.data] : [])
-  };
-}
+// Call Groq LLM to generate theme based on user message
+async function callGroqAPI(prompt) {
+  return new Promise((resolve, reject) => {
+    const postData = JSON.stringify({
+      model: MODEL,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 2000
+    });
 
-// Generate component JSON for a page based on plan
-function generateComponentsForPage(pageName, plan) {
-  const pageComponents = {
-    home: {
-      free: ['heroimageslider', 'productslider', 'categoryslider', 'promobanner', 'newsletter'],
-      pro: ['heroimageslider', 'productslider', 'productslider1', 'categoryslider', 'promobanner', 'shopbybrands', 'slidertabs', 'newsletter', 'productlisttabs', 'slidertabstworows', 'productslidertworows']
-    },
-    about: {
-      free: ['heroimageslider', 'imagetextcolumn', 'categoryslider', 'testimonials'],
-      pro: ['heroimageslider', 'imagetextcolumn', 'imagegridwithcategory', 'imagegridsinglecta', 'imagegridseparatecta', 'imagegridcommoncta', 'testimonials']
-    },
-    contact: {
-      free: ['heroimageslider', 'contactform', 'newsletter'],
-      pro: ['heroimageslider', 'contactform', 'promobanner', 'imagegridwithcategory', 'newsletter']
-    },
-    signup: {
-      free: ['heroimageslider', 'signupform'],
-      pro: ['heroimageslider', 'signupform', 'productslider', 'testimonials']
-    },
-    login: {
-      free: ['heroimageslider', 'loginform'],
-      pro: ['heroimageslider', 'loginform', 'productslider']
-    },
-    privacy: {
-      free: ['heroimageslider', 'textcontent'],
-      pro: ['heroimageslider', 'textcontent', 'faqaccordion']
-    },
-    terms: {
-      free: ['heroimageslider', 'textcontent'],
-      pro: ['heroimageslider', 'textcontent', 'faqaccordion']
-    }
-  };
+    const options = {
+      hostname: 'api.groq.com',
+      path: '/openai/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData)
+      }
+    };
 
-  const componentsList = pageComponents[pageName]?.[plan === 'free' ? 'free' : 'pro'] || [];
-  const componentData = FREE_COMPONENTS?.components || [];
-  const proComponentData = PRO_COMPONENTS?.components || [];
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          resolve(parsed.choices[0].message.content);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
 
-  return componentsList.map((compType, idx) => {
-    const comp = componentData.find(c => c.type === compType) || proComponentData.find(c => c.type === compType) || {};
-    return formatComponent(comp, plan);
+    req.on('error', reject);
+    req.write(postData);
+    req.end();
   });
 }
 
-// Generate layout JSON for a layout page
-function generateLayoutsForPage(pageName, plan) {
-  const layouts = [];
-  const layoutCount = 5; // 5 layouts per page (2 free, 3 pro)
-  
-  for (let i = 1; i <= layoutCount; i++) {
-    const isPlan = (plan === 'free' && i <= 2) || (plan === 'pro');
-    if (!isPlan && i > 2) continue; // Skip pro layouts for free plan
+// Analyze user message with Groq to determine page components and layout preferences
+async function analyzeThemeRequest(userMessage, plan) {
+  const prompt = `You are a theme generator expert. Analyze this user request and respond with a JSON object containing:
 
-    layouts.push({
-      type: `${pageName}_layout_${i}`,
-      title: `${PAGES[pageName].title} Layout ${i}`,
-      visibility: 'visible',
-      plans: (i <= 2) ? '1' : '2', // 1 = free, 2 = pro
-      category: '1',
-      ejs_file: `${pageName}_layout_${i}/template`,
-      css_file: `${pageName}_layout_${i}/styles`,
-      js_file: `${pageName}_layout_${i}/script`,
-      description: `${PAGES[pageName].title} layout variant ${i}`,
-      keyword: `${pageName}, layout, template`,
-      preview_image: `https://imagedelivery.net/placeholder-${pageName}-layout-${i}.jpg`,
-      data: []
-    });
+User Request: "${userMessage}"
+User Plan: ${plan}
+
+Respond with ONLY a valid JSON object (no markdown, no extra text) with this structure:
+{
+  "home": ["component_type1", "component_type2"],
+  "about": ["component_type"],
+  "contact": ["component_type"],
+  "signup": ["component_type"],
+  "login": ["component_type"],
+  "privacy": ["component_type"],
+  "terms": ["component_type"],
+  "shop_layout": 1-5,
+  "category_layout": 1-5,
+  "product_layout": 1-5,
+  "cart_layout": 1-5,
+  "checkout_layout": 1-5,
+  "theme_style": "modern/minimal/bold/professional",
+  "color_scheme": "description",
+  "user_intent": "brief description"
+}
+
+Use component types from: heroimageslider, productslider, categoryslider, promobanner, newsletter, contactform, contactinfo, faqaccordion, team, testimonials, imagetextcolumn
+For layouts, select numbers 1-5 where 1-2 are free and 3-5 are pro.`;
+
+  try {
+    const response = await callGroqAPI(prompt);
+    console.log('Groq Analysis Response:', response);
+    return JSON.parse(response);
+  } catch (error) {
+    console.error('Error analyzing theme request:', error);
+    return null;
   }
+}
+
+// Select appropriate components from library based on analysis
+function selectComponentsForPage(pageName, componentTypes, plan, allComponents) {
+  const components = [];
+  const freeComps = FREE_COMPONENTS?.components || [];
+  const proComps = PRO_COMPONENTS?.components || [];
+  const availableComps = plan === 'free' ? freeComps : [...freeComps, ...proComps];
+
+  componentTypes.forEach(compType => {
+    const found = availableComps.find(c => 
+      c.type === compType || 
+      c.title.toLowerCase().includes(compType.toLowerCase())
+    );
+
+    if (found) {
+      components.push({
+        type: found.type || compType,
+        title: found.title || compType,
+        visibility: 'visible',
+        plans: found.plans || (plan === 'free' ? '1' : '1,2'),
+        category: found.category || '1',
+        ejs_file: found.ejs_file || found.ejsfile || compType,
+        css_file: found.css_file || found.cssfile || compType,
+        js_file: found.js_file || found.jsfile || compType,
+        description: found.description || `${compType} component for ${pageName}`,
+        keyword: found.keyword || `${pageName}, ${compType}`,
+        preview_image: found.preview_image || found.previewimage || '1',
+        data: found.data || []
+      });
+    }
+  });
+
+  return components;
+}
+
+// Generate individual page JSON
+function generatePageJSON(pageName, components) {
+  return {
+    page_name: pageName,
+    page_title: pageName.charAt(0).toUpperCase() + pageName.slice(1),
+    components: components,
+    generated_at: new Date().toISOString()
+  };
+}
+
+// Generate layout assignment JSON
+function generateLayoutAssignments(layoutAnalysis) {
+  const layouts = {};
+  
+  LAYOUT_PAGES.forEach(pageName => {
+    const layoutNum = layoutAnalysis[`${pageName}_layout`] || 1;
+    const isPro = layoutNum > 2;
+    
+    layouts[pageName] = {
+      page_name: pageName,
+      page_title: pageName.charAt(0).toUpperCase() + pageName.slice(1),
+      layout_number: layoutNum,
+      layout_name: LAYOUT_TEMPLATES[pageName]?.layouts[layoutNum - 1] || `Layout ${layoutNum}`,
+      plan: isPro ? 'pro' : 'free',
+      ejs_file: `${pageName}/layout_${layoutNum}`,
+      css_file: `${pageName}/layout_${layoutNum}`,
+      js_file: `${pageName}/layout_${layoutNum}`,
+      description: `${pageName.charAt(0).toUpperCase() + pageName.slice(1)} page with ${isPro ? 'Pro' : 'Free'} layout #${layoutNum}`,
+      preview_image: `https://imagedelivery.net/placeholder-${pageName}-layout-${layoutNum}.jpg`
+    };
+  });
 
   return layouts;
 }
 
-// Build complete theme JSON for all pages
-function buildThemeJSON(userMessage, selectedPlan) {
-  const theme = {
-    components: [],
-    layouts: []
-  };
-
-  // Generate component-based pages (7 pages)
-  const componentPages = ['home', 'about', 'contact', 'signup', 'login', 'privacy', 'terms'];
-  componentPages.forEach(pageName => {
-    const pageComponents = generateComponentsForPage(pageName, selectedPlan);
-    theme.components.push(...pageComponents);
-  });
-
-  // Generate layout-based pages (5 pages)
-  const layoutPages = ['shop', 'category', 'product', 'cart', 'checkout'];
-  layoutPages.forEach(pageName => {
-    const pageLayouts = generateLayoutsForPage(pageName, selectedPlan);
-    theme.layouts.push(...pageLayouts);
-  });
-
-  return {
-    title: 'Generated Theme',
-    plan: selectedPlan,
-    user_message: userMessage,
-    generated_at: new Date().toISOString(),
-    components: theme.components,
-    layouts: theme.layouts,
-    summary: {
-      total_components: theme.components.length,
-      total_layouts: theme.layouts.length,
-      component_pages: componentPages.length,
-      layout_pages: layoutPages.length
-    }
-  };
-}
-
-// Main function: Generate theme with Groq API
+// Main function: Generate theme conversationally with Groq
 async function generateThemeWithGroq(userMessage, selectedPlan) {
   try {
     // Validate inputs
@@ -175,20 +193,78 @@ async function generateThemeWithGroq(userMessage, selectedPlan) {
       };
     }
 
-    console.log('📤 Generating theme for chat message...');
+    console.log('\n📤 Analyzing theme request with Groq LLM...');
     console.log(` Plan: ${selectedPlan}`);
-    console.log(` Message: ${userMessage.substring(0, 60)}...`);
+    console.log(` Message: ${userMessage.substring(0, 80)}...\n`);
 
-    // Generate theme JSON
-    const themeData = buildThemeJSON(userMessage, selectedPlan);
+    // Use Groq to analyze user request
+    const analysis = await analyzeThemeRequest(userMessage, selectedPlan);
 
-    console.log('✓ Theme generated successfully');
-    console.log(` Components: ${themeData.summary.total_components}`);
-    console.log(` Layouts: ${themeData.summary.total_layouts}`);
+    if (!analysis) {
+      return {
+        success: false,
+        error: 'Failed to analyze theme request with Groq LLM'
+      };
+    }
+
+    // Generate page JSONs based on Groq analysis
+    const pages = {};
+    let totalComponents = 0;
+
+    for (const pageName of COMPONENT_PAGES) {
+      const componentTypes = analysis[pageName] || [];
+      console.log(`\n🎨 Generating ${pageName.toUpperCase()} page`);
+      console.log(`   Components: ${componentTypes.join(', ')}`);
+
+      const selectedComponents = selectComponentsForPage(
+        pageName,
+        componentTypes,
+        selectedPlan,
+        { FREE_COMPONENTS, PRO_COMPONENTS }
+      );
+
+      totalComponents += selectedComponents.length;
+      pages[pageName] = generatePageJSON(pageName, selectedComponents);
+    }
+
+    // Generate layout assignments
+    console.log(`\n📐 Generating Layout Assignments`);
+    const layouts = generateLayoutAssignments(analysis);
+    let layoutStr = '';
+    LAYOUT_PAGES.forEach(page => {
+      layoutStr += `\n   ${page}: Layout #${layouts[page].layout_number} (${layouts[page].plan.toUpperCase()})`;
+    });
+    console.log(layoutStr);
+
+    // Compile complete theme
+    const theme = {
+      title: 'Generated Theme',
+      plan: selectedPlan,
+      user_message: userMessage,
+      user_intent: analysis.user_intent || 'Custom theme',
+      theme_style: analysis.theme_style || 'modern',
+      color_scheme: analysis.color_scheme || 'default',
+      generated_at: new Date().toISOString(),
+      component_pages: pages,
+      layout_pages: layouts,
+      summary: {
+        total_component_pages: COMPONENT_PAGES.length,
+        total_layout_pages: LAYOUT_PAGES.length,
+        total_components: totalComponents,
+        total_layouts: LAYOUT_PAGES.length,
+        free_layouts: LAYOUT_PAGES.filter(p => layouts[p].plan === 'free').length,
+        pro_layouts: LAYOUT_PAGES.filter(p => layouts[p].plan === 'pro').length
+      }
+    };
+
+    console.log(`\n✓ Theme generated successfully!`);
+    console.log(`  Component Pages: ${COMPONENT_PAGES.length}`);
+    console.log(`  Total Components: ${totalComponents}`);
+    console.log(`  Layout Pages: ${LAYOUT_PAGES.length}`);
 
     return {
       success: true,
-      data: themeData
+      data: theme
     };
   } catch (error) {
     console.error('❌ Theme Generation Error:', error.message);
