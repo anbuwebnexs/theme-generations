@@ -6,71 +6,70 @@
   <title><%= title %></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    .chat-panel { background: #f8f9fa; }
-    .chat-messages { border: 1px solid #dee2e6; border-radius: 5px; padding: 10px; }
-    .theme-display { }
-    .component-card, .layout-card { border: 2px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 10px 5px; cursor: pointer; transition: all 0.3s; }
-    .component-card:hover, .layout-card:hover { border-color: #0d6efd; transform: translateY(-5px); box-shadow: 0 4px 12px rgba(13,110,253,0.2); }
-    .badge-free { background: #198754; }
-    .badge-paid { background: #ffc107; color: black; }
-    .badge-pro { background: #0d6efd; }
-    .json-display { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-top: 20px; max-height: 600px; overflow-y: auto; }
-    .json-display pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-size: 12px; }
+    body { background: #f5f5f5; }
+    .chat-panel { background: #fff; border-right: 1px solid #dee2e6; }
+    .chat-messages { border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; background: #f8f9fa; }
+    .chat-message-bot { background: #e3f2fd; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #2196F3; }
+    .chat-message-user { background: #f3e5f5; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #9c27b0; text-align: right; }
+    .theme-section { background: #fff; border-radius: 8px; padding: 20px; margin: 15px 0; border: 1px solid #dee2e6; }
+    .page-card { border-left: 4px solid #0d6efd; padding: 15px; margin: 10px 0; background: #f8f9fa; }
+    .layout-badge { display: inline-block; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin: 5px 5px 5px 0; }
+    .layout-free { background: #d4edda; color: #155724; }
+    .layout-pro { background: #fff3cd; color: #856404; }
+    .component-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+    .component-tag { background: #e3f2fd; color: #1976d2; padding: 5px 10px; border-radius: 15px; font-size: 12px; }
   </style>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row h-100">
-      <div class="col-lg-3 chat-panel p-4 border-end" style="max-height: 100vh; overflow-y: auto;">
-        <h3 class="mb-4"><strong>Theme Generator</strong></h3>
+  <div class="container-fluid h-100">
+    <div class="row h-100" style="min-height: 100vh;">
+      <!-- Chat Panel -->
+      <div class="col-lg-3 chat-panel p-4" style="max-height: 100vh; overflow-y: auto;">
+        <h4 class="mb-4"><strong>🎨 Theme Generator</strong></h4>
         <div id="chatContainer" class="chat-messages mb-3" style="height: 400px; overflow-y: auto;"></div>
+        
         <div class="input-group mb-3">
-          <input type="text" id="userMessage" class="form-control" placeholder="Describe your theme...">
+          <input type="text" id="userMessage" class="form-control" placeholder="Describe your theme idea..." onkeypress="if(event.key==='Enter') sendMessage()">
           <button class="btn btn-primary" onclick="sendMessage()">Send</button>
         </div>
+        
         <div class="mb-3">
-          <label><strong>Plan:</strong></label>
+          <label><strong>Select Plan:</strong></label>
           <select id="planSelect" class="form-select">
             <option value="free">Free</option>
             <option value="paid">Paid</option>
           </select>
         </div>
       </div>
-      <div class="col-lg-9 theme-display p-4" style="max-height: 100vh; overflow-y: auto;">
-        <h2 class="mb-4">Generated Theme</h2>
-        <div id="summaryContainer" class="alert alert-info" style="display:none;"></div>
-        <div id="componentsContainer" class="mb-4">
-          <h4>Components (7 Pages)</h4>
-          <div id="componentsList" class="row"></div>
-        </div>
-        <div id="layoutsContainer" class="mb-4">
-          <h4>Layouts (5 Pages)</h4>
-          <div id="layoutsList" class="row"></div>
-        </div>
-        <div id="jsonContainer" class="json-display" style="display:none;">
-          <h5>Generated JSON</h5>
-          <pre id="jsonContent"></pre>
-          <button class="btn btn-sm btn-info mt-2" onclick="copyJSON()">Copy JSON</button>
-        </div>
+
+      <!-- Theme Display Panel -->
+      <div class="col-lg-9 p-4" style="max-height: 100vh; overflow-y: auto;">
+        <div id="themeContainer"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let lastThemeData = null;
+    let lastTheme = null;
 
     async function sendMessage() {
       const msg = document.getElementById('userMessage').value.trim();
       const plan = document.getElementById('planSelect').value;
       if (!msg) return;
-      document.getElementById('userMessage').value = '';
-      
+
+      // Show user message in chat
       const chatDiv = document.getElementById('chatContainer');
-      chatDiv.innerHTML += `<div class="mb-2"><strong>You:</strong> ${msg}</div>`;
+      chatDiv.innerHTML += `<div class="chat-message-user"><strong>You:</strong> ${msg}</div>`;
+      document.getElementById('userMessage').value = '';
       chatDiv.scrollTop = chatDiv.scrollHeight;
 
       try {
+        // Show loading
+        const themeDiv = document.getElementById('themeContainer');
+        themeDiv.innerHTML = `<div class="alert alert-info"><strong>🔄 Analyzing your theme request with Groq LLM...</strong></div>`;
+
+        // Call API
         const res = await fetch('/api/theme/generate', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -79,82 +78,131 @@
 
         const data = await res.json();
         if (data.success) {
-          lastThemeData = data.theme;
+          lastTheme = data.theme;
           displayTheme(data.theme);
-          chatDiv.innerHTML += `<div class="mb-2 text-success"><strong>AI:</strong> ✓ Theme generated successfully<br/>📊 Components: ${data.theme.summary.total_components}<br/>📐 Layouts: ${data.theme.summary.total_layouts}</div>`;
+          
+          // Show bot response
+          chatDiv.innerHTML += `<div class="chat-message-bot">
+            <strong>AI Theme Generator:</strong><br/>
+            ✓ Theme generated successfully!<br/>
+            📊 Component Pages: ${data.theme.summary.total_component_pages}<br/>
+            📐 Layout Pages: ${data.theme.summary.total_layout_pages}<br/>
+            🎯 Style: ${data.theme.theme_style} | Colors: ${data.theme.color_scheme}
+          </div>`;
         } else {
-          chatDiv.innerHTML += `<div class="mb-2 text-danger"><strong>Error:</strong> ${data.error}</div>`;
+          chatDiv.innerHTML += `<div class="chat-message-bot text-danger"><strong>Error:</strong> ${data.error}</div>`;
+          themeDiv.innerHTML = `<div class="alert alert-danger">Failed to generate theme: ${data.error}</div>`;
         }
       } catch(e) {
-        chatDiv.innerHTML += `<div class="mb-2 text-danger"><strong>Error:</strong> ${e.message}</div>`;
+        document.getElementById('chatContainer').innerHTML += `<div class="chat-message-bot text-danger"><strong>Error:</strong> ${e.message}</div>`;
       }
       chatDiv.scrollTop = chatDiv.scrollHeight;
     }
 
     function displayTheme(theme) {
-      // Display summary
-      const summaryDiv = document.getElementById('summaryContainer');
-      summaryDiv.innerHTML = `
-        <strong>Theme Generated Successfully!</strong><br/>
-        Plan: <span class="badge ${theme.plan === 'free' ? 'badge-free' : 'badge-paid'}">${theme.plan.toUpperCase()}</span><br/>
-        Total Components: ${theme.summary.total_components} | Total Layouts: ${theme.summary.total_layouts}
+      const themeDiv = document.getElementById('themeContainer');
+      let html = ``;
+
+      // Header
+      html += `
+        <div class="theme-section">
+          <h3>🎯 Theme Configuration</h3>
+          <p><strong>User Intent:</strong> ${theme.user_intent}</p>
+          <p><strong>Style:</strong> <span class="badge bg-primary">${theme.theme_style}</span> | <strong>Colors:</strong> ${theme.color_scheme}</p>
+          <p><strong>Plan:</strong> <span class="badge bg-${theme.plan === 'free' ? 'success' : 'warning'}">${theme.plan.toUpperCase()}</span></p>
+        </div>
       `;
-      summaryDiv.style.display = 'block';
 
-      // Display components
-      const componentsList = document.getElementById('componentsList');
-      componentsList.innerHTML = '';
-      (theme.components || []).forEach((comp, idx) => {
-        const isFree = comp.plans === '1';
-        const card = `
-          <div class="col-md-6 col-lg-4">
-            <div class="component-card">
-              <h6>${comp.title}</h6>
-              <small><strong>Type:</strong> ${comp.type}</small><br/>
-              <small><strong>Files:</strong> ${comp.ejs_file} / ${comp.css_file} / ${comp.js_file}</small><br/>
-              <div class="mt-2">
-                <span class="badge ${isFree ? 'badge-free' : 'badge-paid'}">${isFree ? 'FREE' : 'PRO'}</span>
-              </div>
+      // Component Pages
+      html += `<div class="theme-section">
+        <h4>📄 Component Pages (7 Pages)</h4>`;
+      
+      const componentPages = theme.component_pages || {};
+      Object.keys(componentPages).forEach(pageName => {
+        const page = componentPages[pageName];
+        const components = page.components || [];
+        const componentNames = components.map(c => c.title).join(', ');
+        
+        html += `
+          <div class="page-card">
+            <h5>${page.page_title}</h5>
+            <p><strong>Components (${components.length}):</strong></p>
+            <div class="component-list">
+              ${components.map(c => `<span class="component-tag">${c.title}</span>`).join('')}
             </div>
+            <small class="text-muted">Files: ${components.length > 0 ? components[0].ejs_file : 'N/A'}</small>
           </div>
         `;
-        componentsList.innerHTML += card;
       });
+      html += `</div>`;
 
-      // Display layouts
-      const layoutsList = document.getElementById('layoutsList');
-      layoutsList.innerHTML = '';
-      (theme.layouts || []).forEach((layout, idx) => {
-        const isFree = layout.plans === '1';
-        const card = `
-          <div class="col-md-6 col-lg-4">
-            <div class="layout-card">
-              <h6>${layout.title}</h6>
-              <small><strong>Type:</strong> ${layout.type}</small><br/>
-              <small><strong>EJS:</strong> ${layout.ejs_file}</small><br/>
-              <div class="mt-2">
-                <span class="badge ${isFree ? 'badge-free' : 'badge-paid'}">${isFree ? 'FREE' : 'PRO'}</span>
-              </div>
-            </div>
+      // Layout Pages
+      html += `<div class="theme-section">
+        <h4>📐 Layout Assignments (5 Pages)</h4>`;
+      
+      const layoutPages = theme.layout_pages || {};
+      Object.keys(layoutPages).forEach(pageName => {
+        const layout = layoutPages[pageName];
+        const isPro = layout.plan === 'pro';
+        const badgeClass = isPro ? 'layout-pro' : 'layout-free';
+        
+        html += `
+          <div class="page-card">
+            <h5>${layout.page_title}</h5>
+            <p>
+              <strong>Layout:</strong> <span class="layout-badge ${badgeClass}">Layout #${layout.layout_number} - ${layout.layout_name}</span>
+            </p>
+            <small><strong>File:</strong> ${layout.ejs_file}</small>
           </div>
         `;
-        layoutsList.innerHTML += card;
       });
+      html += `</div>`;
 
-      // Display JSON
-      const jsonDiv = document.getElementById('jsonContainer');
-      const jsonContent = document.getElementById('jsonContent');
-      jsonContent.textContent = JSON.stringify(theme, null, 2);
-      jsonDiv.style.display = 'block';
+      // Summary
+      html += `
+        <div class="theme-section alert alert-success">
+          <h5>✓ Summary</h5>
+          <ul class="mb-0">
+            <li>Total Component Pages: ${theme.summary.total_component_pages}</li>
+            <li>Total Components: ${theme.summary.total_components}</li>
+            <li>Layout Pages: ${theme.summary.total_layout_pages}</li>
+            <li>Free Layouts: ${theme.summary.free_layouts}</li>
+            <li>Pro Layouts: ${theme.summary.pro_layouts}</li>
+          </ul>
+          <button class="btn btn-sm btn-info mt-3" onclick="downloadJSON()">📥 Download JSON</button>
+          <button class="btn btn-sm btn-secondary mt-3" onclick="copyJSON()">📋 Copy JSON</button>
+        </div>
+      `;
+
+      // Full JSON
+      html += `
+        <div class="theme-section">
+          <h5>📄 Full Theme JSON</h5>
+          <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto; font-size: 11px;" id="jsonOutput">${JSON.stringify(theme, null, 2)}</pre>
+        </div>
+      `;
+
+      themeDiv.innerHTML = html;
     }
 
     function copyJSON() {
-      const jsonContent = document.getElementById('jsonContent').textContent;
-      navigator.clipboard.writeText(jsonContent).then(() => {
-        alert('JSON copied to clipboard!');
+      if (!lastTheme) return;
+      navigator.clipboard.writeText(JSON.stringify(lastTheme, null, 2)).then(() => {
+        alert('✓ JSON copied to clipboard!');
       }).catch(err => {
-        alert('Failed to copy JSON: ' + err);
+        alert('Failed to copy: ' + err);
       });
+    }
+
+    function downloadJSON() {
+      if (!lastTheme) return;
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(lastTheme, null, 2)));
+      element.setAttribute('download', `theme-${Date.now()}.json`);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     }
   </script>
 </body>
