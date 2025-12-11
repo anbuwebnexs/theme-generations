@@ -1,4 +1,4 @@
-// Groq REST API Service - Theme Generator with Fixed Component Data
+// Groq REST API Service - Theme Generator with Smart Component Selection
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
@@ -7,6 +7,18 @@ const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const MODEL = 'llama-3.1-8b-instant';
 const COMPONENT_PAGES = ['home', 'about', 'contact', 'signup', 'login', 'privacy', 'terms'];
 const LAYOUT_PAGES = ['shop', 'category', 'product', 'cart', 'checkout'];
+
+// Theme intent mapping - which components are best for different theme types
+const THEME_COMPONENT_MAP = {
+  amazon: [0, 1, 2, 3, 4, 5, 6, 7],  // Hero, product sliders, category, promo, brands, etc.
+  shopify: [0, 1, 4, 5, 6, 7],         // Hero, product sliders, promo, brands
+  fashion: [0, 1, 3, 4, 8],            // Hero, products, promo, newsletter, testimonials
+  grocery: [0, 1, 2, 3, 4, 5],         // Hero, products, categories, promo, brands, newsletter
+  electronics: [0, 1, 2, 4, 7],        // Hero, products, categories, promo, brands
+  minimal: [0, 1, 6],                  // Simple: hero, products, newsletter
+  modern: [0, 1, 2, 3, 4, 5],          // Hero, products, categories, promo, brands, newsletter
+  classic: [0, 1, 3, 5],               // Hero, products, promo, brands
+};
 
 if (!GROQ_API_KEY) {
   console.warn('⚠️ GROQ_API_KEY not set');
@@ -25,7 +37,7 @@ function loadComponentData(plan) {
   }
 }
 
-// Call Groq API to analyze user intent and recommend components
+// Call Groq API to analyze user intent
 async function callGroqAPI(systemPrompt, userMessage) {
   return new Promise((resolve, reject) => {
     const postData = JSON.stringify({
@@ -68,22 +80,27 @@ async function callGroqAPI(systemPrompt, userMessage) {
   });
 }
 
-// Analyze user message and recommend which components to use
-async function analyzeUserRequest(userMessage, plan) {
-  const systemPrompt = `You are an expert theme designer. Analyze the user request and recommend which components from the available data should be used.
+// Analyze user message and detect theme intent
+async function analyzeThemeIntent(userMessage, plan, availableComponentCount) {
+  const systemPrompt = `You are an expert e-commerce theme designer. Analyze the user request and identify the theme type and recommended components.
+
 Respond with ONLY this JSON (no markdown, no extra text):
 {
-  "selected_component_indices": [0, 1, 2],
-  "shop_layout": 1,
-  "category_layout": 1,
-  "product_layout": 2,
-  "cart_layout": 1,
-  "checkout_layout": 2,
-  "theme_style": "modern",
-  "colors": "default",
+  "theme_type": "amazon|shopify|fashion|grocery|electronics|minimal|modern|classic",
+  "component_indices": [0, 1, 2, 3, 4],
+  "shop_layout": 1-5,
+  "category_layout": 1-5,
+  "product_layout": 1-5,
+  "cart_layout": 1-5,
+  "checkout_layout": 1-5,
+  "theme_style": "modern|classic|minimal|vibrant",
+  "colors": "color description",
   "intent": "one line summary"
 }
-Choose component indices based on the user's request. Use available components from the ${plan} plan.`;
+
+For theme type, match the closest type. Available component indices: 0-${availableComponentCount - 1}.
+Make sure component_indices are within available range.
+For amazon clone, use more components. For minimal, use fewer. Include hero slider (usually 0) in almost all themes.`;
   
   const userPrompt = `Plan: ${plan}\nUser request: ${userMessage}`;
   
@@ -93,9 +110,10 @@ Choose component indices based on the user's request. Use available components f
     return JSON.parse(response);
   } catch (error) {
     console.error('Analysis error:', error.message);
-    // Return default recommendation
+    // Default to modern theme with multiple components
     return {
-      selected_component_indices: [0, 1, 2, 3, 4],
+      theme_type: 'modern',
+      component_indices: [0, 1, 2, 3, 4].filter(i => i < availableComponentCount),
       shop_layout: 1,
       category_layout: 1,
       product_layout: 2,
@@ -132,7 +150,42 @@ function generateLayout(pageName, layoutNum) {
   };
 }
 
-// Main function to generate theme based on user request
+// Build page with multiple selected components
+function buildPageWithComponents(pageName, allSelectedComponents) {
+  // Assign components to pages smartly
+  const componentsForPage = [];
+  
+  // Home page gets most components
+  if (pageName === 'home') {
+    componentsForPage.push(...allSelectedComponents.slice(0, Math.ceil(allSelectedComponents.length * 0.5)));
+  }
+  // About page gets some display components
+  else if (pageName === 'about') {
+    componentsForPage.push(...allSelectedComponents.filter(c => 
+      c.category === '1' || c.category === 'display'
+    ));
+  }
+  // Contact page gets contact related
+  else if (pageName === 'contact') {
+    componentsForPage.push(...allSelectedComponents.filter(c => 
+      c.type.includes('contact') || c.type.includes('form')
+    ));
+  }
+  // Other pages get remaining components
+  else {
+    const used = componentsForPage.length;
+    componentsForPage.push(allSelectedComponents[used % allSelectedComponents.length]);
+  }
+  
+  return {
+    page_name: pageName,
+    page_title: pageName.charAt(0).toUpperCase() + pageName.slice(1),
+    components: componentsForPage.length > 0 ? componentsForPage : [allSelectedComponents[0]],
+    generated_at: new Date().toISOString()
+  };
+}
+
+// Main function to generate theme
 async function generateThemeWithGroq(userMessage, selectedPlan) {
   try {
     if (!userMessage || !selectedPlan) {
@@ -149,13 +202,17 @@ async function generateThemeWithGroq(userMessage, selectedPlan) {
     const componentData = loadComponentData(selectedPlan);
     console.log(`📦 Loaded ${componentData.components.length} components for ${selectedPlan} plan`);
     
-    // Analyze user request to determine which components to use
-    const analysis = await analyzeUserRequest(userMessage, selectedPlan);
+    // Analyze user intent and get recommended components
+    const analysis = await analyzeThemeIntent(userMessage, selectedPlan, componentData.components.length);
     
-    // Step 2: Build selected components with all properties from JSON data
+    // Get component indices from analysis
+    let selectedIndices = analysis.component_indices || [];
+    if (!Array.isArray(selectedIndices)) {
+      selectedIndices = [0, 1, 2, 3, 4].filter(i => i < componentData.components.length);
+    }
+    
+    // Build selected components with all properties
     const selectedComponents = [];
-    const selectedIndices = analysis.selected_component_indices || [];
-    
     selectedIndices.forEach(index => {
       if (componentData.components[index]) {
         const component = componentData.components[index];
@@ -176,30 +233,16 @@ async function generateThemeWithGroq(userMessage, selectedPlan) {
       }
     });
     
-    console.log(`✓ Selected ${selectedComponents.length} components`);
+    console.log(`✓ Selected ${selectedComponents.length} components for ${analysis.theme_type} theme`);
     
-    // Step 3: Distribute selected components across pages
+    // Build pages with multiple components
     const pages = {};
-    const componentsPerPage = Math.ceil(selectedComponents.length / COMPONENT_PAGES.length);
-    let componentIndex = 0;
-    
     for (const pageName of COMPONENT_PAGES) {
-      const pageComponents = [];
-      for (let i = 0; i < componentsPerPage && componentIndex < selectedComponents.length; i++) {
-        pageComponents.push(selectedComponents[componentIndex++]);
-      }
-      
-      pages[pageName] = {
-        page_name: pageName,
-        page_title: pageName.charAt(0).toUpperCase() + pageName.slice(1),
-        components: pageComponents.length > 0 ? pageComponents : [selectedComponents[0]],
-        generated_at: new Date().toISOString()
-      };
-      
+      pages[pageName] = buildPageWithComponents(pageName, selectedComponents);
       console.log(`🎨 ${pageName}: ${pages[pageName].components.length} components`);
     }
     
-    // Step 4: Generate layouts
+    // Generate layouts
     const layouts = {};
     for (const pageName of LAYOUT_PAGES) {
       const layoutNum = analysis[`${pageName}_layout`] || 1;
@@ -207,11 +250,12 @@ async function generateThemeWithGroq(userMessage, selectedPlan) {
       console.log(`📐 ${pageName}: Layout #${layoutNum}`);
     }
     
-    // Step 5: Build complete theme
+    // Build complete theme
     const theme = {
-      title: `${componentData.title} Theme`,
+      title: `${analysis.theme_type.charAt(0).toUpperCase() + analysis.theme_type.slice(1)} Theme`,
       plan: selectedPlan,
       user_message: userMessage,
+      theme_type: analysis.theme_type,
       user_intent: analysis.intent || 'Custom theme',
       theme_style: analysis.theme_style || 'modern',
       color_scheme: analysis.colors || 'default',
@@ -225,11 +269,12 @@ async function generateThemeWithGroq(userMessage, selectedPlan) {
         total_components: selectedComponents.length,
         total_layouts: LAYOUT_PAGES.length,
         free_layouts: Object.values(layouts).filter(l => l.plan === 'free').length,
-        pro_layouts: Object.values(layouts).filter(l => l.plan === 'pro').length
+        pro_layouts: Object.values(layouts).filter(l => l.plan === 'pro').length,
+        theme_type: analysis.theme_type
       }
     };
     
-    console.log(`\n✓ Theme ready with ${selectedComponents.length} components`);
+    console.log(`\n✓ Theme ready: ${selectedComponents.length} components across ${Object.keys(pages).length} pages`);
     
     return {
       success: true,
