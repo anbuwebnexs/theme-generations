@@ -6,204 +6,240 @@
   <title><%= title %></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background: #f5f5f5; }
-    .chat-panel { background: #fff; border-right: 1px solid #dee2e6; }
-    .chat-messages { border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; background: #f8f9fa; }
-    .chat-message-bot { background: #e3f2fd; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #2196F3; }
-    .chat-message-user { background: #f3e5f5; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #9c27b0; text-align: right; }
-    .theme-section { background: #fff; border-radius: 8px; padding: 20px; margin: 15px 0; border: 1px solid #dee2e6; }
-    .page-card { border-left: 4px solid #0d6efd; padding: 15px; margin: 10px 0; background: #f8f9fa; }
-    .layout-badge { display: inline-block; padding: 8px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; margin: 5px 5px 5px 0; }
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+    .main-container { display: flex; height: 100vh; }
+    .chat-panel { background: #fff; border-right: 2px solid #dee2e6; display: flex; flex-direction: column; }
+    .chat-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 20px; border-bottom: 1px solid #dee2e6; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; }
+    .msg-user { background: #f3e5f5; padding: 12px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #9c27b0; text-align: right; }
+    .msg-bot { background: #e3f2fd; padding: 12px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #2196F3; }
+    .chat-input-area { padding: 15px; border-top: 1px solid #dee2e6; background: #f8f9fa; }
+    .theme-display { background: #fff; overflow-y: auto; padding: 20px; }
+    .page-section { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 12px; padding: 20px; margin: 15px 0; border: 1px solid #dee2e6; }
+    .page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+    .page-actions { display: flex; gap: 8px; }
+    .page-actions button { padding: 6px 12px; font-size: 12px; }
+    .component-badge { display: inline-block; background: #e3f2fd; color: #1976d2; padding: 6px 12px; border-radius: 20px; font-size: 12px; margin: 4px; }
+    .layout-badge { display: inline-block; padding: 8px 15px; border-radius: 5px; font-weight: bold; margin: 5px 0; }
     .layout-free { background: #d4edda; color: #155724; }
     .layout-pro { background: #fff3cd; color: #856404; }
-    .component-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
-    .component-tag { background: #e3f2fd; color: #1976d2; padding: 5px 10px; border-radius: 15px; font-size: 12px; }
+    .session-controls { background: #f8f9fa; padding: 10px; border-bottom: 1px solid #dee2e6; font-size: 12px; }
   </style>
 </head>
 <body>
-  <div class="container-fluid h-100">
-    <div class="row h-100" style="min-height: 100vh;">
-      <!-- Chat Panel -->
-      <div class="col-lg-3 chat-panel p-4" style="max-height: 100vh; overflow-y: auto;">
-        <h4 class="mb-4"><strong>🎨 Theme Generator</strong></h4>
-        <div id="chatContainer" class="chat-messages mb-3" style="height: 400px; overflow-y: auto;"></div>
-        
-        <div class="input-group mb-3">
-          <input type="text" id="userMessage" class="form-control" placeholder="Describe your theme idea..." onkeypress="if(event.key==='Enter') sendMessage()">
-          <button class="btn btn-primary" onclick="sendMessage()">Send</button>
-        </div>
-        
+  <div class="main-container">
+    <!-- Left Chat Panel -->
+    <div class="col-lg-3" style="flex: 0 0 30%; display: flex; flex-direction: column;">
+      <div class="chat-header">
+        <h5 class="mb-0">🎨 Theme AI</h5>
+        <small>Conversational Theme Generator</small>
+      </div>
+      
+      <div class="session-controls">
+        Session ID: <code id="sessionId" style="font-size: 10px;">new</code>
+        <button class="btn btn-sm btn-outline-danger float-end" onclick="clearSession()" style="font-size: 10px; padding: 2px 6px;">🔄 Clear</button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <div class="chat-input-area">
         <div class="mb-3">
-          <label><strong>Select Plan:</strong></label>
-          <select id="planSelect" class="form-select">
+          <label class="form-label"><small><strong>Plan:</strong></small></label>
+          <select id="planSelect" class="form-select form-select-sm">
             <option value="free">Free</option>
             <option value="paid">Paid</option>
           </select>
         </div>
+        <div class="input-group input-group-sm">
+          <input type="text" id="userInput" class="form-control" placeholder="Describe your theme..." onkeypress="if(event.key==='Enter') sendMessage()">
+          <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+        </div>
       </div>
+    </div>
 
-      <!-- Theme Display Panel -->
-      <div class="col-lg-9 p-4" style="max-height: 100vh; overflow-y: auto;">
-        <div id="themeContainer"></div>
+    <!-- Right Display Panel -->
+    <div class="col-lg-9 theme-display" style="flex: 1;">
+      <div id="displayArea">
+        <div class="alert alert-light text-center mt-5">
+          <h4>🎨 Theme Generator</h4>
+          <p>Start by describing your theme idea...</p>
+        </div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    let sessionId = null;
+    let conversationHistory = [];
     let lastTheme = null;
 
+    function initSession() {
+      sessionId = 'session_' + Date.now();
+      document.getElementById('sessionId').textContent = sessionId.substring(0, 12) + '...';
+      conversationHistory = [];
+    }
+
+    function clearSession() {
+      if (confirm('Clear all conversation history?')) {
+        initSession();
+        document.getElementById('chatMessages').innerHTML = '';
+        document.getElementById('displayArea').innerHTML = `
+          <div class="alert alert-light text-center mt-5">
+            <h4>🔄 Session Cleared</h4>
+            <p>Start a new conversation...</p>
+          </div>
+        `;
+      }
+    }
+
     async function sendMessage() {
-      const msg = document.getElementById('userMessage').value.trim();
+      const msg = document.getElementById('userInput').value.trim();
       const plan = document.getElementById('planSelect').value;
       if (!msg) return;
 
-      // Show user message in chat
-      const chatDiv = document.getElementById('chatContainer');
-      chatDiv.innerHTML += `<div class="chat-message-user"><strong>You:</strong> ${msg}</div>`;
-      document.getElementById('userMessage').value = '';
-      chatDiv.scrollTop = chatDiv.scrollHeight;
+      // Add to conversation
+      conversationHistory.push({ role: 'user', content: msg });
+      addChatMessage('user', msg);
+      document.getElementById('userInput').value = '';
 
       try {
-        // Show loading
-        const themeDiv = document.getElementById('themeContainer');
-        themeDiv.innerHTML = `<div class="alert alert-info"><strong>🔄 Analyzing your theme request with Groq LLM...</strong></div>`;
+        document.getElementById('displayArea').innerHTML = `<div class="alert alert-info" style="margin-top: 20px;"><strong>🔄 Generating theme...</strong> Processing your request with AI...</div>`;
 
-        // Call API
         const res = await fetch('/api/theme/generate', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({message: msg, plan})
+          body: JSON.stringify({message: msg, plan, session_id: sessionId, history: conversationHistory})
         });
 
         const data = await res.json();
         if (data.success) {
           lastTheme = data.theme;
           displayTheme(data.theme);
-          
-          // Show bot response
-          chatDiv.innerHTML += `<div class="chat-message-bot">
-            <strong>AI Theme Generator:</strong><br/>
-            ✓ Theme generated successfully!<br/>
-            📊 Component Pages: ${data.theme.summary.total_component_pages}<br/>
-            📐 Layout Pages: ${data.theme.summary.total_layout_pages}<br/>
-            🎯 Style: ${data.theme.theme_style} | Colors: ${data.theme.color_scheme}
-          </div>`;
+          addChatMessage('bot', `✓ Theme generated!\n📊 Pages: ${data.theme.summary.total_component_pages}\n📐 Layouts: ${data.theme.summary.total_layout_pages}\n🎯 Style: ${data.theme.theme_style}`);
         } else {
-          chatDiv.innerHTML += `<div class="chat-message-bot text-danger"><strong>Error:</strong> ${data.error}</div>`;
-          themeDiv.innerHTML = `<div class="alert alert-danger">Failed to generate theme: ${data.error}</div>`;
+          addChatMessage('bot', `❌ Error: ${data.error}`);
         }
       } catch(e) {
-        document.getElementById('chatContainer').innerHTML += `<div class="chat-message-bot text-danger"><strong>Error:</strong> ${e.message}</div>`;
+        addChatMessage('bot', `❌ Error: ${e.message}`);
       }
-      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    function addChatMessage(sender, text) {
+      const msgDiv = document.getElementById('chatMessages');
+      const msgClass = sender === 'user' ? 'msg-user' : 'msg-bot';
+      msgDiv.innerHTML += `<div class="${msgClass}">${text.replace(/\n/g, '<br>')}</div>`;
+      msgDiv.scrollTop = msgDiv.scrollHeight;
     }
 
     function displayTheme(theme) {
-      const themeDiv = document.getElementById('themeContainer');
-      let html = ``;
-
-      // Header
-      html += `
-        <div class="theme-section">
-          <h3>🎯 Theme Configuration</h3>
-          <p><strong>User Intent:</strong> ${theme.user_intent}</p>
-          <p><strong>Style:</strong> <span class="badge bg-primary">${theme.theme_style}</span> | <strong>Colors:</strong> ${theme.color_scheme}</p>
-          <p><strong>Plan:</strong> <span class="badge bg-${theme.plan === 'free' ? 'success' : 'warning'}">${theme.plan.toUpperCase()}</span></p>
-        </div>
-      `;
+      const display = document.getElementById('displayArea');
+      let html = `<h4>✓ ${theme.theme_style} Theme</h4>`;
 
       // Component Pages
-      html += `<div class="theme-section">
-        <h4>📄 Component Pages (7 Pages)</h4>`;
-      
-      const componentPages = theme.component_pages || {};
-      Object.keys(componentPages).forEach(pageName => {
-        const page = componentPages[pageName];
-        const components = page.components || [];
-        const componentNames = components.map(c => c.title).join(', ');
+      html += `<h5 class="mt-4">📄 Component Pages (7)</h5>`;
+      const pageKeys = Object.keys(theme.component_pages || {});
+      pageKeys.forEach(pageName => {
+        const page = theme.component_pages[pageName];
+        const comps = page.components || [];
+        const compNames = comps.map(c => c.title).join(', ') || 'No components';
         
         html += `
-          <div class="page-card">
-            <h5>${page.page_title}</h5>
-            <p><strong>Components (${components.length}):</strong></p>
-            <div class="component-list">
-              ${components.map(c => `<span class="component-tag">${c.title}</span>`).join('')}
+          <div class="page-section">
+            <div class="page-header">
+              <div><strong>${page.page_title}</strong> <small>(${comps.length} components)</small></div>
+              <div class="page-actions">
+                <button class="btn btn-sm btn-info" onclick="viewPageJSON('${pageName}')">View</button>
+                <button class="btn btn-sm btn-success" onclick="downloadPageJSON('${pageName}')">Download</button>
+                <button class="btn btn-sm btn-warning" onclick="copyPageJSON('${pageName}')">Copy</button>
+              </div>
             </div>
-            <small class="text-muted">Files: ${components.length > 0 ? components[0].ejs_file : 'N/A'}</small>
+            <div style="margin-top: 10px;">
+              <strong>Components:</strong><br/>
+              <div>${comps.map(c => `<span class="component-badge">${c.title}</span>`).join('')}</div>
+            </div>
           </div>
         `;
       });
-      html += `</div>`;
 
       // Layout Pages
-      html += `<div class="theme-section">
-        <h4>📐 Layout Assignments (5 Pages)</h4>`;
-      
-      const layoutPages = theme.layout_pages || {};
-      Object.keys(layoutPages).forEach(pageName => {
-        const layout = layoutPages[pageName];
-        const isPro = layout.plan === 'pro';
-        const badgeClass = isPro ? 'layout-pro' : 'layout-free';
+      html += `<h5 class="mt-4">📐 Layout Pages (5)</h5>`;
+      const layoutKeys = Object.keys(theme.layout_pages || {});
+      layoutKeys.forEach(pageName => {
+        const layout = theme.layout_pages[pageName];
+        const badgeClass = layout.plan === 'pro' ? 'layout-pro' : 'layout-free';
         
         html += `
-          <div class="page-card">
-            <h5>${layout.page_title}</h5>
-            <p>
-              <strong>Layout:</strong> <span class="layout-badge ${badgeClass}">Layout #${layout.layout_number} - ${layout.layout_name}</span>
-            </p>
-            <small><strong>File:</strong> ${layout.ejs_file}</small>
+          <div class="page-section">
+            <div class="page-header">
+              <div><strong>${layout.page_title}</strong></div>
+              <div class="page-actions">
+                <button class="btn btn-sm btn-info" onclick="viewLayoutJSON('${pageName}')">View</button>
+                <button class="btn btn-sm btn-success" onclick="downloadLayoutJSON('${pageName}')">Download</button>
+                <button class="btn btn-sm btn-warning" onclick="copyLayoutJSON('${pageName}')">Copy</button>
+              </div>
+            </div>
+            <div style="margin-top: 10px;">
+              <span class="layout-badge ${badgeClass}">Layout #${layout.layout_number} - ${layout.layout_name}</span>
+              <br/><small class="text-muted">File: ${layout.ejs_file}</small>
+            </div>
           </div>
         `;
       });
-      html += `</div>`;
 
-      // Summary
-      html += `
-        <div class="theme-section alert alert-success">
-          <h5>✓ Summary</h5>
-          <ul class="mb-0">
-            <li>Total Component Pages: ${theme.summary.total_component_pages}</li>
-            <li>Total Components: ${theme.summary.total_components}</li>
-            <li>Layout Pages: ${theme.summary.total_layout_pages}</li>
-            <li>Free Layouts: ${theme.summary.free_layouts}</li>
-            <li>Pro Layouts: ${theme.summary.pro_layouts}</li>
-          </ul>
-          <button class="btn btn-sm btn-info mt-3" onclick="downloadJSON()">📥 Download JSON</button>
-          <button class="btn btn-sm btn-secondary mt-3" onclick="copyJSON()">📋 Copy JSON</button>
-        </div>
-      `;
-
-      // Full JSON
-      html += `
-        <div class="theme-section">
-          <h5>📄 Full Theme JSON</h5>
-          <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto; font-size: 11px;" id="jsonOutput">${JSON.stringify(theme, null, 2)}</pre>
-        </div>
-      `;
-
-      themeDiv.innerHTML = html;
+      display.innerHTML = html;
     }
 
-    function copyJSON() {
-      if (!lastTheme) return;
-      navigator.clipboard.writeText(JSON.stringify(lastTheme, null, 2)).then(() => {
-        alert('✓ JSON copied to clipboard!');
-      }).catch(err => {
-        alert('Failed to copy: ' + err);
-      });
+    // Per-page JSON actions
+    function viewPageJSON(pageName) {
+      if (!lastTheme || !lastTheme.component_pages[pageName]) return;
+      const json = JSON.stringify(lastTheme.component_pages[pageName], null, 2);
+      showJSONModal(json, pageName);
     }
 
-    function downloadJSON() {
-      if (!lastTheme) return;
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(lastTheme, null, 2)));
-      element.setAttribute('download', `theme-${Date.now()}.json`);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+    function downloadPageJSON(pageName) {
+      if (!lastTheme || !lastTheme.component_pages[pageName]) return;
+      const json = JSON.stringify(lastTheme.component_pages[pageName], null, 2);
+      downloadJSON(json, `${pageName}-page.json`);
     }
+
+    function copyPageJSON(pageName) {
+      if (!lastTheme || !lastTheme.component_pages[pageName]) return;
+      const json = JSON.stringify(lastTheme.component_pages[pageName], null, 2);
+      navigator.clipboard.writeText(json).then(() => alert('✓ Copied!')).catch(e => alert('Copy failed: ' + e));
+    }
+
+    function viewLayoutJSON(pageName) {
+      if (!lastTheme || !lastTheme.layout_pages[pageName]) return;
+      const json = JSON.stringify(lastTheme.layout_pages[pageName], null, 2);
+      showJSONModal(json, pageName);
+    }
+
+    function downloadLayoutJSON(pageName) {
+      if (!lastTheme || !lastTheme.layout_pages[pageName]) return;
+      const json = JSON.stringify(lastTheme.layout_pages[pageName], null, 2);
+      downloadJSON(json, `${pageName}-layout.json`);
+    }
+
+    function copyLayoutJSON(pageName) {
+      if (!lastTheme || !lastTheme.layout_pages[pageName]) return;
+      const json = JSON.stringify(lastTheme.layout_pages[pageName], null, 2);
+      navigator.clipboard.writeText(json).then(() => alert('✓ Copied!')).catch(e => alert('Copy failed: ' + e));
+    }
+
+    function showJSONModal(json, title) {
+      alert(`${title.toUpperCase()} JSON:\n\n${json.substring(0, 500)}...\n\n(Full JSON - use Download or Copy for complete data)`);
+    }
+
+    function downloadJSON(json, filename) {
+      const el = document.createElement('a');
+      el.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(json);
+      el.download = filename;
+      el.click();
+    }
+
+    // Initialize
+    initSession();
   </script>
 </body>
 </html>
