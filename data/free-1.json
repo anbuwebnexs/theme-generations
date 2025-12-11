@@ -6,26 +6,17 @@
       "title": "Hero Image Slider",
       "visibility": "visible",
       "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "description": "1",
-      "keyword": "1",
+      "category": "display",
+      "ejs_file": "heroimageslider/1",
+      "css_file": "heroimageslider/1",
+      "js_file": "heroimageslider/1",
+      "description": "Full-width hero image slider with call-to-action buttons. Perfect for showcasing featured products, promotions, and brand messaging at the top of your homepage.",
+      "keyword": "hero, slider, banner, banner carousel, featured, amazon, shopify, homepage, hero section",
       "preview_image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
       "data": [
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
-          "link": "/shop"
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
-          "link": "/categories"
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
-          "link": "/deals"
-        }
+        {"image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner", "link": "/shop"},
+        {"image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner", "link": "/categories"},
+        {"image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/8b3fa83a-e026-4b3a-37f6-bb0298ce9100/b2bbanner", "link": "/deals"}
       ]
     },
     {
@@ -33,555 +24,107 @@
       "title": "Daily Best Sells",
       "visibility": "visible",
       "plans": "1",
-      "category": "",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Daily Best Sells",
-          "subheading": "",
-          "order_by": "featured",
-          "view_text": "",
-          "view_link": "",
-          "include_products": [],
-          "exclude_products": [],
-          "include_categories": [],
-          "exclude_categories": []
-        }
-      ]
-    },
-    {
-      "type": "product_slider1",
-      "title": "Popular Products",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "",
+      "category": "display",
       "ejs_file": "product_slider/1",
       "css_file": "product_slider/1",
       "js_file": "product_slider/1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Popular Product",
-          "subheading": "",
-          "order_by": "popularity",
-          "view_text": "",
-          "view_link": "",
-          "include_products": [],
-          "exclude_products": [],
-          "include_categories": [],
-          "exclude_categories": []
-        }
-      ]
+      "description": "Horizontal scrolling product slider displaying best-selling or featured products. Essential for e-commerce themes like Amazon and Shopify.",
+      "keyword": "product slider, carousel, best sellers, featured products, amazon clone, e-commerce, shopify, trending products",
+      "preview_image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/placeholder.jpg/b2b",
+      "data": [{"heading": "Daily Best Sells", "subheading": "", "order_by": "featured", "view_text": "", "view_link": "", "include_products": [], "exclude_products": [], "include_categories": [], "exclude_categories": []}]
     },
     {
       "type": "category_slider",
-      "title": "Popular Products",
+      "title": "Popular Categories",
       "visibility": "visible",
       "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Popular Product",
-          "subheading": "",
-          "order_by": "popularity",
-          "view_text": "",
-          "view_link": "",
-          "include_categories": [],
-          "exclude_categories": []
-        }
-      ]
+      "category": "display",
+      "ejs_file": "category_slider/1",
+      "css_file": "category_slider/1",
+      "js_file": "category_slider/1",
+      "description": "Category slider showcasing product categories with images. Great for navigation and improving user experience on marketplace and grocery stores.",
+      "keyword": "category slider, product categories, category navigation, amazon, grocery store, marketplace, shopping categories",
+      "preview_image": "https://imagedelivery.net/placeholder.jpg/b2b",
+      "data": [{"heading": "Popular Categories", "subheading": "", "order_by": "popularity", "view_text": "", "view_link": "", "include_categories": [], "exclude_categories": []}]
     },
     {
       "type": "promo_banner",
       "title": "Promo Banner Grid",
       "visibility": "visible",
       "plans": "1",
-      "category": "1",
+      "category": "display",
       "ejs_file": "promo_banner/1",
       "css_file": "promo_banner/1",
       "js_file": "promo_banner/1",
-      "description": "1",
-      "preview_image": "1",
-      "keyword": "1",
+      "description": "Multi-section promotional banner grid with customizable layouts. Perfect for displaying multiple promotional campaigns, sales, and offers.",
+      "keyword": "promo banner, promotional campaigns, sales banner, discount banner, offer section, marketing banner, amazon deals",
+      "preview_image": "https://imagedelivery.net/placeholder.jpg/b2b",
       "data": [
-        {
-          "layout": "large_left",
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/953a54a4-032e-4d2e-fc5c-e5e7bbf7d900/b2bbanner",
-          "heading": "",
-          "subheading": "",
-          "button_text": "",
-          "button_link": "/shop/spices"
-        },
-        {
-          "layout": "small_top_right",
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/c9f626f9-17d8-45e1-3805-3ec74f92e700/b2bbanner",
-          "heading": "",
-          "subheading": "",
-          "button_text": "",
-          "button_link": "/shop/ghee"
-        },
-        {
-          "layout": "small_bottom_right",
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/8b3fa83a-e026-4b3a-37f6-bb0298ce9100/b2bbanner",
-          "heading": "",
-          "subheading": "",
-          "button_text": "",
-          "button_link": "/shop/vegetables"
-        }
+        {"layout": "large_left", "image": "https://imagedelivery.net/placeholder.jpg", "heading": "", "subheading": "", "button_text": "", "button_link": "/shop"},
+        {"layout": "small_top_right", "image": "https://imagedelivery.net/placeholder.jpg", "heading": "", "subheading": "", "button_text": "", "button_link": "/shop"},
+        {"layout": "small_bottom_right", "image": "https://imagedelivery.net/placeholder.jpg", "heading": "", "subheading": "", "button_text": "", "button_link": "/shop"}
       ]
+    },
+    {
+      "type": "newsletter",
+      "title": "Newsletter Signup",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "interactive",
+      "ejs_file": "newsletter/1",
+      "css_file": "newsletter/1",
+      "js_file": "newsletter/1",
+      "description": "Email subscription form for capturing leads and building email list. Includes customizable colors, messaging, and call-to-action buttons.",
+      "keyword": "newsletter, email subscription, lead capture, contact form, subscriber list, email marketing",
+      "preview_image": "https://imagedelivery.net/placeholder.jpg/b2b",
+      "data": [{"heading": "SUBSCRIBE TO KNOW ABOUT OFFERS", "subheading": "Get exclusive deals and updates delivered to your inbox", "placeholder": "Enter Your Email", "button_text": "Submit", "background_color": "#4dffaf", "heading_color": "#333333", "text_color": "#666666", "button_color": "#27ae60", "button_text_color": "#ffffff", "input_placeholder_color": "#999999", "form_id": "2"}]
     },
     {
       "type": "shop_by_brands",
       "visibility": "visible",
       "title": "Shop by Brands",
       "plans": "1",
-      "category": "",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
+      "category": "display",
+      "ejs_file": "shop_by_brands/1",
+      "css_file": "shop_by_brands/1",
+      "js_file": "shop_by_brands/1",
+      "description": "Display brand logos in a grid layout. Allows customers to shop by their favorite brands. Common in electronics, fashion, and marketplace stores.",
+      "keyword": "brands, brand showcase, brand slider, brand logos, electronics brands, fashion brands, amazon, marketplace",
+      "preview_image": "https://imagedelivery.net/placeholder.jpg/b2b",
       "data": [
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/539f3a86-f6a8-46bc-c943-eb34e4af2900/b2bbanner",
-          "link": ""
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/539f3a86-f6a8-46bc-c943-eb34e4af2900/b2bbanner",
-          "link": ""
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/539f3a86-f6a8-46bc-c943-eb34e4af2900/b2bbanner",
-          "link": ""
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/539f3a86-f6a8-46bc-c943-eb34e4af2900/b2bbanner",
-          "link": ""
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/539f3a86-f6a8-46bc-c943-eb34e4af2900/b2bbanner",
-          "link": ""
-        },
-        {
-          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/539f3a86-f6a8-46bc-c943-eb34e4af2900/b2bbanner",
-          "link": ""
-        }
+        {"image": "https://imagedelivery.net/placeholder.jpg", "link": ""},
+        {"image": "https://imagedelivery.net/placeholder.jpg", "link": ""},
+        {"image": "https://imagedelivery.net/placeholder.jpg", "link": ""},
+        {"image": "https://imagedelivery.net/placeholder.jpg", "link": ""}
       ]
     },
     {
       "type": "slider_tabs",
-      "title": "Slider Tabs",
+      "title": "Product Slider with Tabs",
       "visibility": "visible",
       "plans": "1",
-      "category": "",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Daily Best Sel",
-          "subheading": "Don't miss the deals",
-          "view_text": "View All",
-          "view_link": "/products",
-          "tabs": [
-            {
-              "key": "tab0",
-              "label": "Featured",
-              "order_by": "featured",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            },
-            {
-              "key": "tab1",
-              "label": "Popular",
-              "order_by": "popularity",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            },
-            {
-              "key": "tab2",
-              "label": "New",
-              "order_by": "latest",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            }
-          ]
-        }
-      ]
+      "category": "display",
+      "ejs_file": "slider_tabs/1",
+      "css_file": "slider_tabs/1",
+      "js_file": "slider_tabs/1",
+      "description": "Product slider with tab filtering. Show different product categories through tabs (Featured, Popular, New). Great for amazon-style layouts.",
+      "keyword": "slider tabs, tabbed products, product tabs, featured products, popular products, new arrivals, amazon clone",
+      "preview_image": "https://imagedelivery.net/placeholder.jpg/b2b",
+      "data": [{"heading": "Daily Best Sells", "subheading": "Don't miss the deals", "view_text": "View All", "view_link": "/products", "tabs": [{"key": "tab0", "label": "Featured", "order_by": "featured", "include_products": [], "exclude_products": [], "include_categories": [], "exclude_categories": []}, {"key": "tab1", "label": "Popular", "order_by": "popularity", "include_products": [], "exclude_products": [], "include_categories": [], "exclude_categories": []}, {"key": "tab2", "label": "New", "order_by": "latest", "include_products": [], "exclude_products": [], "include_categories": [], "exclude_categories": []}]}]
     },
     {
-   "type": "newsletter",
-   "title": "Newsletter",
-   "visibility": "visible",
-   "plans": "1",
-   "category": "1",
-   "ejs_file": "1",
-   "css_file": "1",
-   "js_file": "1",
-   "preview_image": "1",
-   "description": "1",
-   "keyword": "1",
-   "data": [
-    {
-     "heading": "SUBSCRIBE TO KNOW ABOUT OFFERS",
-     "subheading": "Get exclusive deals and updates delivered to your inbox",
-     "placeholder": "Enter Your Email",
-     "button_text": "Submit",
-     "background_color": "#4dffaf",
-     "heading_color": "#333333",
-     "text_color": "#666666",
-     "button_color": "#27ae60",
-     "button_text_color": "#ffffff",
-     "input_placeholder_color": "#999999",
-     "form_id": "2"
-    }
-   ]
-  },
-  {
-      "type": "product_list_tabs",
-      "title": "Product List with Tabs",
+      "type": "testimonials",
+      "title": "Customer Testimonials",
       "visibility": "visible",
       "plans": "1",
-      "category": "",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Featured Products",
-          "subheading": "Shop by category",
-          "columns": 2,
-          "rows": 3,
-          "view_text": "View All",
-          "view_link": "/products",
-          "tabs": [
-            {
-              "key": "tab0",
-              "label": "New Arrivals",
-              "order_by": "latest",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            },
-            {
-              "key": "tab1",
-              "label": "Best Sellers",
-              "order_by": "popularity",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "slider_tabs_two_rows",
-      "title": "Slider Tabs with two rows",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Daily Best Sells",
-          "subheading": "Don't miss the deals",
-          "rows": 2,
-          "view_text": "View All",
-          "view_link": "/products",
-          "tabs": [
-            {
-              "key": "tab0",
-              "label": "Featured",
-              "order_by": "featured",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            },
-            {
-              "key": "tab1",
-              "label": "Popular",
-              "order_by": "popularity",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            },
-            {
-              "key": "tab2",
-              "label": "New",
-              "order_by": "latest",
-              "include_products": [],
-              "exclude_products": [],
-              "include_categories": [],
-              "exclude_categories": []
-            }
-          ]
-        }
-      ]
-    },
-     {
-      "type": "product_slider_two_rows",
-      "title": "Product Slider with two rows",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "order_by": "featured",
-      "preview_image": "1",
-      "description":"1",
-      "keyword": "1",
-      "data": [
-        {
-          "heading": "Daily Best Sells",
-          "subheading": "",
-          "rows": 2,
-          "view_text": "",
-          "view_link": "",
-          "include_products": [],
-          "exclude_products": [],
-          "include_categories": [],
-          "exclude_categories": []
-        }
-      ]
-    },
-    {
-      "type": "image_text_column",
-      "title": "Image and Text Column",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description": "1",
-      "keyword": "1",
-      "data": [
-        {
-          "image": "/placeholders/grid1.jpg"
-        },
-        {
-          "text1": "/placeholders/grid2.jpg",
-          "text2": "/placeholders/grid2.jpg",
-          "text3": "/placeholders/grid2.jpg"
-        }
-      ]
-    },
-     {
-      "type": "image_grid_with_category",
-      "title": "Image Grid with categories",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description":"1",
-      "keyword": "1",
-      "data": [
-        {
-          "image": "/placeholders/grid1.jpg",
-          "category_name": "Category 1",
-          "category_cta": "Text",
-          "link": "/category1"
-        },
-        {
-          "image": "/placeholders/grid2.jpg",
-          "link": "/category2"
-        }
-      ]
-    },
-    {
-      "type": "image_grid_single_cta",
-      "title": "Image Grids",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description":"1",
-      "keyword": "1",
-      "data": [
-        {
-          "category_name": "Summer Nights 1",
-          "text_color": "#000000",
-          "button_text": "Shop Now1",
-          "button_text_color": "#000000",
-          "button_background_color": "#ffffff",
-          "link": "/category1",
-          "image": "builder/75wuuf3gmi8gqf1r-rectangle8.png"
-        },
-        {
-          "link": "/category2",
-          "image": "builder/75wuuf3gmi8gqf1r-rectangle91.png"
-        }
-      ]
-    },
-    {
-      "type": "image_grid_separate_cta",
-      "title": "Image Grids with Separate CTA",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description":"1",
-      "keyword": "1",
-      "data": [
-        {
-          "category_name": "Summer Nights 1",
-          "text_color": "#000000",
-          "button_text": "Shop Now1",
-          "button_text_color": "#000000",
-          "button_background_color": "#ffffff",
-          "link": "/category1",
-          "image": "builder/75wuuf3gmi8gqf1r-rectangle8.png"
-        },
-        {
-          "category_name": "Summer Nights",
-          "text_color": "#000000",
-          "button_text": "Shop Now2",
-          "button_text_color": "#714747",
-          "button_background_color": "#ffffff",
-          "link": "/category2",
-          "image": "builder/75wuuf3gmi8gqf1r-rectangle91.png"
-        }
-      ]
-    },
-     {
-      "type": "image_grid_common_cta",
-      "title": "Image Grids with Common CTA",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description":"1",
-      "keyword": "1",
-      "data": [
-        {
-          "image": "builder/75wuu474mi8foc3r-rectangle8.png",
-          "link": "/category1"
-        },
-        {
-          "image": "/placeholders/grid2.jpg",
-          "link": "/category2"
-        },
-        {
-          "image": "/placeholders/grid2.jpg",
-          "link": "/category2"
-        }
-      ],
-      "category_name": "Summer Nights",
-      "text_color": "#000000",
-      "background_color": "#ffffff",
-      "button_text": "Shop Now",
-      "button_text_color": "#000000",
-      "button_background_color": "#ffffff"
-    },
-    {
-      "type": "promo_images_four_section_grid",
-      "title": "Promo Banner",
-      "visibility": "visible",
-      "plans": "1",
-      "category": "1",
-      "ejs_file": "1",
-      "css_file": "1",
-      "js_file": "1",
-      "preview_image": "1",
-      "description":"1",
-      "keyword": "1",
-      "data": [
-        {
-          "layout_type": "four_section_grid",
-          "sections": [
-            {
-              "position": "top_left",
-              "heading": "CERTIFIED",
-              "subheading": "AYURVEDIC FOODS",
-              "button_text": "BUY NOW",
-              "button_link": "/",
-              "text_color": "#ffffff",
-              "image": "/placeholders/banner1.jpg"
-            },
-            {
-              "position": "top_right",
-              "heading": "CERTIFIED",
-              "subheading": "ORGANIC FOOD",
-              "button_text": "BUY NOW",
-              "button_link": "/",
-              "text_color": "#ffffff",
-              "image": "/placeholders/banner1.jpg"
-            },
-            {
-              "position": "bottom_left",
-              "heading": "SUPER MARKET",
-              "subheading": "Nexus Organic store is updated regularly with offers",
-              "button_text": "LEARN MORE",
-              "button_link": "/shop",
-              "text_color": "#ffffff",
-              "image": "/placeholders/banner1.jpg"
-            },
-            {
-              "position": "bottom_right",
-              "heading": "Fresh & Healthy",
-              "subheading": "VEGETABLES",
-              "button_text": "ORDER NOW",
-              "button_link": "/",
-              "text_color": "#ffffff",
-              "image": "/placeholders/banner1.jpg",
-              "phone": "012-3456-789",
-              "website": "www.yourwebsite.com",
-              "phone_icon": "builder/75wuums8mi7d4b10-phone-icon.jpg",
-              "website_icon": "/placeholders/website-icon.png"
-            }
-          ]
-        }
-      ]
+      "category": "display",
+      "ejs_file": "testimonials/1",
+      "css_file": "testimonials/1",
+      "js_file": "testimonials/1",
+      "description": "Display customer reviews and testimonials in a carousel slider. Builds trust and credibility for your store.",
+      "keyword": "testimonials, reviews, customer reviews, ratings, feedback, social proof, trust, amazon reviews",
+      "preview_image": "https://imagedelivery.net/placeholder.jpg/b2b",
+      "data": []
     }
   ]
 }
