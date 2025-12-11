@@ -1,0 +1,29 @@
+{
+  "title": "Grocery Theme",
+  "components": [
+    {
+      "type": "product_slider",
+      "title": "Daily Best Sells",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "",
+      "ejs_file": "product_slider/1",
+      "css_file": "product_slider/1",
+      "js_file": "product_slider/1",
+      "preview_image": "1",
+      "data": [
+        {
+          "heading": "Daily Best Sells",
+          "subheading": "Most Demanding & Trending Deals",
+          "order_by": "",
+          "view_text": "",
+          "view_link": "",
+          "include_products": [],
+          "exclude_products": [],
+          "include_categories": [],
+          "exclude_categories": []
+        }
+      ]
+    }
+  ]
+}
