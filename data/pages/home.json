@@ -1,0 +1,164 @@
+{
+  "components": [
+    {
+      "type": "hero_image_slider",
+      "title": "Hero Image Slider",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "hero_image_slider/1",
+      "css_file": "hero_image_slider/1",
+      "js_file": "hero_image_slider/1",
+      "description": "Full-width hero image carousel with multiple slides",
+      "keyword": "hero, slider, banner, carousel",
+      "preview_image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+      "data": [
+        {
+          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+          "link": "/shop"
+        },
+        {
+          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+          "link": "/categories"
+        },
+        {
+          "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+          "link": "/deals"
+        }
+      ]
+    },
+    {
+      "type": "product_slider",
+      "title": "Daily Best Sells",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "",
+      "ejs_file": "product_slider/1",
+      "css_file": "product_slider/1",
+      "js_file": "product_slider/1",
+      "preview_image": "1",
+      "description": "Horizontal product carousel displaying featured and trending products",
+      "keyword": "products, slider, featured, trending",
+      "data": [
+        {
+          "heading": "Daily Best Sells",
+          "subheading": "Don't miss the deals",
+          "order_by": "featured",
+          "view_text": "View All",
+          "view_link": "/products",
+          "include_products": [],
+          "exclude_products": [],
+          "include_categories": [],
+          "exclude_categories": []
+        }
+      ]
+    },
+    {
+      "type": "category_slider",
+      "title": "Popular Categories",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "category_slider/1",
+      "css_file": "category_slider/1",
+      "js_file": "category_slider/1",
+      "preview_image": "1",
+      "description": "Category carousel for easy navigation and browsing",
+      "keyword": "category, navigation, shopping",
+      "data": [
+        {
+          "heading": "Popular Categories",
+          "subheading": "",
+          "order_by": "popularity",
+          "view_text": "",
+          "view_link": "",
+          "include_categories": [],
+          "exclude_categories": []
+        }
+      ]
+    },
+    {
+      "type": "promo_banner_grid",
+      "title": "Promotional Banners",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "promo_banner/1",
+      "css_file": "promo_banner/1",
+      "js_file": "promo_banner/1",
+      "preview_image": "1",
+      "description": "Grid of promotional banners with multiple sections and CTAs",
+      "keyword": "promo, banner, promotion, grid",
+      "data": [
+        {
+          "layout": "four_section_grid",
+          "sections": [
+            {
+              "position": "top_left",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "New Arrivals",
+              "subheading": "Latest collection",
+              "button_text": "Shop Now",
+              "button_link": "/shop/new",
+              "text_color": "ffffff"
+            },
+            {
+              "position": "top_right",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Best Sellers",
+              "subheading": "Most popular items",
+              "button_text": "View Top",
+              "button_link": "/shop/best-sellers",
+              "text_color": "ffffff"
+            },
+            {
+              "position": "bottom_left",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Special Offers",
+              "subheading": "Limited time deals",
+              "button_text": "Buy Now",
+              "button_link": "/shop/offers",
+              "text_color": "ffffff"
+            },
+            {
+              "position": "bottom_right",
+              "image": "https://imagedelivery.net/r89jzjNfZziPHJz5JXGOCw/dc85441d-3938-4d19-7007-fa3c1f6fd000/b2bbanner",
+              "heading": "Trending Now",
+              "subheading": "This week's favorites",
+              "button_text": "Explore",
+              "button_link": "/shop/trending",
+              "text_color": "ffffff"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "title": "Newsletter Subscription",
+      "visibility": "visible",
+      "plans": "1",
+      "category": "1",
+      "ejs_file": "newsletter/1",
+      "css_file": "newsletter/1",
+      "js_file": "newsletter/1",
+      "preview_image": "1",
+      "description": "Email subscription form for newsletter signup",
+      "keyword": "newsletter, email, subscription",
+      "data": [
+        {
+          "heading": "Subscribe To Know About Offers",
+          "subheading": "Get exclusive deals and updates delivered to your inbox",
+          "placeholder": "Enter Your Email",
+          "button_text": "Submit",
+          "background_color": "4dffaf",
+          "heading_color": "333333",
+          "text_color": "666666",
+          "button_color": "27ae60",
+          "button_text_color": "ffffff",
+          "input_placeholder_color": "999999"
+        }
+      ]
+    }
+  ]
+}
